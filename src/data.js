@@ -2,6 +2,14 @@ import { SiWolframmathematica, SiCssdesignawards, SiCodesignal } from "react-ico
 import { IoMdSettings } from "react-icons/io";
 import { FaCode } from "react-icons/fa6";
 import { AiFillPieChart } from "react-icons/ai";
+import {
+  reactQuiz,
+  backendQuiz,
+  dataAnalyticsQuiz,
+  uiUxQuiz,
+  productDesignQuiz,
+  dataScienceQuiz
+} from './fallbackQuizData'
 
 export const techStacks = [
   {
@@ -48,6 +56,18 @@ export const techStacks = [
   }
 ];
 
-export const getStackById = (stackId) => techStacks.find((item) => item.id === stackId) || null
+export const getStackById = (stackId) =>
+   techStacks.find((item) => item.id === stackId) || null;
+
+export const fallbackQuizMap={
+  "frontend-engineering":reactQuiz,
+  "backeend-engineering":backendQuiz,
+  "data-analytics":dataAnalyticsQuiz,
+  "data-science":dataScienceQuiz,
+  "ui-ux":uiUxQuiz,
+  "product-design":productDesignQuiz
+}
+
+export const getFallbackQuiz = (stackId) => fallbackQuizMap[stackId] || null
 
 
