@@ -1,3 +1,5 @@
+import { getFallbackQuiz } from "./data";
+
 const OPENAI_API_URL = "https://api.openai.com/v1/responses";
 const MODEL = "gpt-4.1-mini";
 
@@ -32,7 +34,11 @@ const extractJsonArray = (content) => {
 const isValidQuestion = (item) => {
   if (!item || typeof item !== "object") return false;
   const validLevel = ["Beginner", "Intermediate", "Advanced"].includes(item.level);
-  const hasCore = typeof item.question === "string" && typeof item.type === "string" && typeof item.answer === "string" && typeof item.explanation === "string";
+  const hasCore =
+    typeof item.question === "string" &&
+    typeof item.type === "string" &&
+    typeof item.answer === "string" &&
+    typeof item.explanation === "string";
   if (!validLevel || !hasCore) return false;
 
   if (item.type === "mcq") {
@@ -59,54 +65,67 @@ const validateQuiz = (quiz) => {
   if (!Array.isArray(quiz) || quiz.length !== 20) {
     throw new Error("Expected exactly 20 questions from OpenAI.");
   }
-
   if (!quiz.every(isValidQuestion)) {
     throw new Error("OpenAI returned invalid quiz question format.");
   }
-
   const types = new Set(quiz.map((item) => item.type));
   if (!types.has("mcq") || !types.has("open")) {
     throw new Error("Quiz must contain both mcq and open questions.");
   }
-
   return quiz;
 };
 
-export async function fetchQuizFromOpenAI(stackName) {
+export async function fetchQuizFromOpenAI(stackName, stackId) {
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+
+  // No API key — go straight to fallback
   if (!apiKey) {
-    throw new Error("Missing OpenAI API key. Set VITE_OPENAI_API_KEY in your .env file.");
+    return useFallback(stackId, "No OpenAI API key found — using local questions.");
   }
 
-  const response = await fetch(OPENAI_API_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      input: buildPrompt(stackName)
-    })
-  });
+  try {
+    const response = await fetch(OPENAI_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        input: buildPrompt(stackName)
+      })
+    });
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`OpenAI request failed (${response.status}): ${message}`);
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`OpenAI request failed (${response.status}): ${message}`);
+    }
+
+    const payload = await response.json();
+    const rawText =
+      payload.output_text ??
+      payload.output
+        ?.flatMap((entry) => entry.content || [])
+        .map((item) => item.text || "")
+        .join("\n") ??
+      "";
+
+    if (!rawText) {
+      throw new Error("OpenAI returned an empty response.");
+    }
+
+    const quiz = JSON.parse(extractJsonArray(rawText));
+    return validateQuiz(quiz);
+  } catch (err) {
+    console.warn("OpenAI fetch failed — falling back to local questions.", err.message);
+    return useFallback(stackId, err.message);
   }
+}
 
-  const payload = await response.json();
-  const rawText =
-    payload.output_text ??
-    payload.output
-      ?.flatMap((entry) => entry.content || [])
-      .map((item) => item.text || "")
-      .join("\n") ??
-    "";
-  if (!rawText) {
-    throw new Error("OpenAI returned an empty response.");
+function useFallback(stackId, reason) {
+  const fallback = getFallbackQuiz(stackId);
+  if (!fallback) {
+    throw new Error(`${reason} — no local fallback available for this stack.`);
   }
-
-  const quiz = JSON.parse(extractJsonArray(rawText));
-  return validateQuiz(quiz);
+  return fallback;
 }

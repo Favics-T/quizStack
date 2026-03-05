@@ -33,7 +33,7 @@ function QuizPage() {
       setLoading(true);
       setError("");
       try {
-        const quiz = await fetchQuizFromOpenAI(selectedStack.name);
+        const quiz = await fetchQuizFromOpenAI(selectedStack.name, selectedStack.id);
         if (!live) return;
         setQuestions(quiz);
         setIndex(0);

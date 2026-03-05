@@ -61,7 +61,7 @@ export const getStackById = (stackId) =>
 
 export const fallbackQuizMap={
   "frontend-engineering":reactQuiz,
-  "backeend-engineering":backendQuiz,
+  "backend-engineering":backendQuiz,
   "data-analytics":dataAnalyticsQuiz,
   "data-science":dataScienceQuiz,
   "ui-ux":uiUxQuiz,
