@@ -61,6 +61,8 @@ function QuizPage({ theme, onToggleTheme }) {
       }
     }
 
+    
+
     loadQuiz();
     return () => {
       live = false;
