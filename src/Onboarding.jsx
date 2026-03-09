@@ -7,7 +7,7 @@ export default function Onboarding({ theme, onToggleTheme }) {
   const [selected, setSelected] = useState(techStacks[0]?.id || "");
   const navigate = useNavigate();
 
-  const startQuiz = () => {
+  const startInterview = () => {
     if (!selected) return;
     navigate(`/quiz?stack=${encodeURIComponent(selected)}`);
   };
@@ -19,10 +19,10 @@ export default function Onboarding({ theme, onToggleTheme }) {
       </div>
 
       <section className="mx-auto mt-3 w-full max-w-5xl rounded-3xl border border-slate-200 bg-white/85 p-6 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/85">
-        <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">QuizStack</p>
-        <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">Pick Your Tech Stack</h1>
+        <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">InterviewStack</p>
+        <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">Choose Interview Track</h1>
         <p className="mt-3 max-w-3xl text-slate-700 dark:text-slate-300">
-          Choose one learning track. Your quiz will be generated from your selected stack using OpenAI with automatic local fallback.
+          Pick one role-focused track. You will run through a timed interview session and receive clear learning-gap feedback at the end.
         </p>
 
         <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -53,10 +53,10 @@ export default function Onboarding({ theme, onToggleTheme }) {
         <div className="mt-6 flex justify-end">
           <button
             className="rounded-xl bg-slate-900 px-5 py-2.5 font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-emerald-600 dark:hover:bg-emerald-500"
-            onClick={startQuiz}
+            onClick={startInterview}
             disabled={!selected}
           >
-            Continue to Quiz
+            Start Interview
           </button>
         </div>
       </section>

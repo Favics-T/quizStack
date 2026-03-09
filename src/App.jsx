@@ -55,7 +55,7 @@ function QuizPage({ theme, onToggleTheme }) {
       } catch (err) {
         if (!live) return;
         setQuestions([]);
-        setError(err instanceof Error ? err.message : "Failed to fetch quiz questions.");
+        setError(err instanceof Error ? err.message : "Failed to fetch interview questions.");
       } finally {
         if (live) setLoading(false);
       }
@@ -167,9 +167,9 @@ function QuizPage({ theme, onToggleTheme }) {
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
         <section className="mx-auto mt-3 w-full max-w-3xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Generating Quiz</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Preparing Interview</p>
           <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">{selectedStack.name}</h1>
-          <p className="mt-2 text-slate-600 dark:text-slate-300">Fetching 20 questions from OpenAI API for your selected stack.</p>
+          <p className="mt-2 text-slate-600 dark:text-slate-300">Building a 20-question interview for your selected track.</p>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
             <div className="h-full w-1/3 animate-pulse rounded-full bg-emerald-500" />
           </div>
@@ -185,8 +185,8 @@ function QuizPage({ theme, onToggleTheme }) {
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
         <section className="mx-auto mt-3 w-full max-w-3xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
-          <p className="text-xs uppercase tracking-[0.2em] text-rose-500">Quiz Error</p>
-          <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">Unable to load questions</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-rose-500">Interview Error</p>
+          <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">Unable to load interview questions</h1>
           <p className="mt-2 text-slate-600 dark:text-slate-300">{error}</p>
           <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button className="rounded-xl border border-slate-300 px-4 py-2 font-semibold text-slate-700 transition hover:bg-slate-100 dark:border-slate-600 dark:text-slate-100 dark:hover:bg-slate-800" onClick={() => navigate("/")}>
@@ -208,7 +208,7 @@ function QuizPage({ theme, onToggleTheme }) {
           <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         </div>
         <section className="mx-auto mt-3 w-full max-w-3xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">No Quiz Data</p>
+          <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">No Interview Data</p>
           <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">Questions were not returned.</h1>
           <button className="mt-5 rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:bg-slate-700 dark:bg-emerald-600 dark:hover:bg-emerald-500" onClick={restartQuiz}>
             Generate Again
@@ -229,6 +229,7 @@ function QuizPage({ theme, onToggleTheme }) {
             stackName={selectedStack.name}
             score={score}
             total={total}
+            questions={questions}
             answers={answers}
             onChangeStack={() => navigate("/")}
             onRegenerate={restartQuiz}
@@ -262,7 +263,7 @@ function QuizPage({ theme, onToggleTheme }) {
         <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{selectedStack.name}</p>
-            <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">AI Generated Quiz</h1>
+            <h1 className="mt-2 text-2xl font-bold text-slate-900 dark:text-slate-100">AI Interview Session</h1>
           </div>
           <div className="flex items-center gap-2">
             <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-sm font-semibold text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">
@@ -343,7 +344,7 @@ function QuizPage({ theme, onToggleTheme }) {
             </button>
           ) : (
             <button className="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:bg-slate-700 dark:bg-emerald-600 dark:hover:bg-emerald-500" onClick={handleNext}>
-              {isLast ? "Finish Quiz" : "Next Question"}
+              {isLast ? "Finish Interview" : "Next Question"}
             </button>
           )}
         </footer>

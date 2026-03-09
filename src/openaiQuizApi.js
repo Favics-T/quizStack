@@ -4,7 +4,7 @@ const OPENAI_API_URL = "https://api.openai.com/v1/responses";
 const MODEL = "gpt-4.1-mini";
 
 const buildPrompt = (stackName) => `
-Generate a quiz JSON array with exactly 20 questions for "${stackName}".
+Generate an interview-question JSON array with exactly 20 questions for "${stackName}".
 
 Rules:
 1) Difficulty should progress from Beginner, to Intermediate, to Advanced.
@@ -13,6 +13,7 @@ Rules:
    - Open-ended: user types answer.
 3) Each question object must include:
    - level: "Beginner" | "Intermediate" | "Advanced"
+   - topic: concise skill area label (example: "API Design" or "React Performance")
    - question: string
    - type: "mcq" or "open"
    - options: only for "mcq", shape { "A":"", "B":"", "C":"", "D":"" }
@@ -35,6 +36,7 @@ const isValidQuestion = (item) => {
   if (!item || typeof item !== "object") return false;
   const validLevel = ["Beginner", "Intermediate", "Advanced"].includes(item.level);
   const hasCore =
+    (item.topic === undefined || typeof item.topic === "string") &&
     typeof item.question === "string" &&
     typeof item.type === "string" &&
     typeof item.answer === "string" &&
@@ -63,14 +65,14 @@ const isValidQuestion = (item) => {
 
 const validateQuiz = (quiz) => {
   if (!Array.isArray(quiz) || quiz.length !== 20) {
-    throw new Error("Expected exactly 20 questions from OpenAI.");
+    throw new Error("Expected exactly 20 interview questions from OpenAI.");
   }
   if (!quiz.every(isValidQuestion)) {
-    throw new Error("OpenAI returned invalid quiz question format.");
+    throw new Error("OpenAI returned an invalid interview question format.");
   }
   const types = new Set(quiz.map((item) => item.type));
   if (!types.has("mcq") || !types.has("open")) {
-    throw new Error("Quiz must contain both mcq and open questions.");
+    throw new Error("Interview must contain both mcq and open questions.");
   }
   return quiz;
 };

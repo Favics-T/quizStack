@@ -19,7 +19,7 @@ function renderCorrect(question) {
 export default function ResultsReview({ questions, answers, onBack }) {
   return (
     <section className="mx-auto w-full max-w-4xl rounded-2xl border border-slate-200 bg-white/90 p-6 shadow-xl backdrop-blur dark:border-slate-700 dark:bg-slate-900/90">
-      <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Results Review</p>
+      <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Interview Review</p>
       <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-slate-100">Per-question breakdown</h1>
 
       <div className="mt-6 space-y-4">
@@ -54,7 +54,7 @@ export default function ResultsReview({ questions, answers, onBack }) {
 
       <div className="mt-6 flex justify-end">
         <button className="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white transition hover:bg-slate-700 dark:bg-emerald-600 dark:hover:bg-emerald-500" onClick={onBack}>
-          Back to Score
+          Back to Interview Summary
         </button>
       </div>
     </section>
